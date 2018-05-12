@@ -4,6 +4,7 @@ import co.nstant.`in`.cbor.CborBuilder
 import co.nstant.`in`.cbor.CborEncoder
 import com.google.common.base.CharMatcher
 import scorex.crypto.hash.Blake2b256
+import scorex.crypto.hash.Sha256
 import java.io.ByteArrayOutputStream
 import java.math.BigInteger
 import java.math.BigInteger.ZERO
@@ -16,6 +17,18 @@ fun ByteArray.cborEnc(): ByteArray {
 
 fun ByteArray.blake2b(): ByteArray {
     return Blake2b256.hash(this)
+}
+
+fun ByteArray.sha256(): ByteArray {
+    return Sha256.hash(this)
+}
+
+fun ByteArray.getBits(len: Int):ByteArray {
+    if (len == 0 || this.isEmpty())
+        return byteArrayOf()
+    val (q,r) = len quotRem 8
+    val s = this.take(q).toByteArray()
+    return if (r == 0) s else s + ((this[q] + 128) and (0xff shl (8 - r))).toByte()
 }
 
 fun String.isAscii(): Boolean {

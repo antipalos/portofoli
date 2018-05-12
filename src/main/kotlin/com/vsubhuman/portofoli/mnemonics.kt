@@ -22,8 +22,15 @@ fun fromMnemonic(words: List<String>):ByteArray {
     val ms_bs = indicesToBytes(indices)
     val (entLen, sumLen) = (words.size * 11) quotRem 32
     val (ms_ent, ms_sum) = ms_bs splitAt (entLen * 4)
-    // todo: checksum
+    val ms_sum_num = numCS(sumLen, ms_sum)
+    val ent_sum_num = numCS(sumLen, calcCS(sumLen, ms_ent))
+    if (ms_sum_num != ent_sum_num)
+        error("fromMnemonic: checksum failed: $ent_sum_num != $ms_sum_num")
     return ms_ent
+}
+
+fun calcCS(len: Int, ent: ByteArray):ByteArray {
+    return ent.map { (it + 128).toByte() }.toByteArray().sha256().getBits(len)
 }
 
 fun numCS(len: Int, ent: ByteArray):BigInteger {
