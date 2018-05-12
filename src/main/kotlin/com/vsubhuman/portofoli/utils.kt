@@ -3,11 +3,16 @@ package com.vsubhuman.portofoli
 import co.nstant.`in`.cbor.CborBuilder
 import co.nstant.`in`.cbor.CborEncoder
 import com.google.common.base.CharMatcher
+import org.apache.commons.codec.binary.Hex
 import scorex.crypto.hash.Blake2b256
 import scorex.crypto.hash.Sha256
 import java.io.ByteArrayOutputStream
 import java.math.BigInteger
 import java.math.BigInteger.ZERO
+
+fun ByteArray.hex():String {
+    return Hex.encodeHexString(this)
+}
 
 fun ByteArray.cborEnc(): ByteArray {
     val baos = ByteArrayOutputStream();
@@ -17,6 +22,10 @@ fun ByteArray.cborEnc(): ByteArray {
 
 fun ByteArray.blake2b(): ByteArray {
     return Blake2b256.hash(this)
+}
+
+fun ByteArray.toUnsignedBytes():ByteArray {
+    return this.map { (it+128).toByte() }.toByteArray()
 }
 
 fun ByteArray.sha256(): ByteArray {

@@ -2,6 +2,10 @@ package com.vsubhuman.portofoli
 
 import java.math.BigInteger
 
+fun toHashSeed(words: List<String>):ByteArray {
+    return fromMnemonic(words).toUnsignedBytes().serializedBlake2b()
+}
+
 fun toMnemonic(ent: ByteArray):List<String> {
     val (cs_len, rem) = ent.size quotRem 4
     if (rem != 0)
@@ -32,7 +36,7 @@ fun fromMnemonic(words: List<String>):ByteArray {
 }
 
 fun calcCS(len: Int, ent: ByteArray):ByteArray {
-    return ent.map { (it + 128).toByte() }.toByteArray().sha256().getBits(len)
+    return ent.toUnsignedBytes().sha256().getBits(len)
 }
 
 fun numCS(len: Int, ent: ByteArray):BigInteger {
