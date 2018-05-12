@@ -8,7 +8,9 @@ fun toMnemonic(ent: ByteArray):List<String> {
         error("toMnemonic: entropy must be a multiple of 4 bytes");
     if (cs_len > 16)
         error("toMnemonic: maximum entropy is 64 bytes (512 bits)")
-    return emptyList()
+    val cs = calcCS(cs_len, ent)
+    val indices = bytesToIndices(ent + cs)
+    return indices.map(mnemonics::get)
 }
 
 fun fromMnemonic(words: List<String>):ByteArray {
@@ -46,6 +48,19 @@ fun indicesToBytes(indices: List<Int>):ByteArray {
     val x = (indices.fold(BigInteger.ZERO, { a, b -> (a shl 11) + b.toBigInteger()}) shl shiftSize).toByteArrayBE()
     val bl = if (r == 0) q else q + 1 // length of resulting ByteString
     return IntArray(bl - x.size).map({ (it - 128).toByte() }).toByteArray() + x
+}
+
+fun bytesToIndices(ent: ByteArray):List<Int> {
+    val (q,r) = (ent.size * 8) quotRem 11
+    val num = ent.toBigIntegerBE() shr r
+    val wordsLen = mnemonics.size.toBigInteger()
+    return Pair(q,num).unfoldr({ p -> when {
+        p.first <= 0 -> null
+        else -> Pair(
+            (p.second % wordsLen).toInt(),
+            Pair(p.first - 1, p.second shr 11))
+    }}
+    ).reversed()
 }
 
 val mnemonics = listOf("abandon", "ability", "able", "about", "above", "absent"
