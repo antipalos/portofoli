@@ -26,6 +26,10 @@ fun fromMnemonic(words: List<String>):ByteArray {
     return ms_ent
 }
 
+fun numCS(len: Int, ent: ByteArray):BigInteger {
+    return ent.toBigIntegerBE() shr (8 - (len % 8))
+}
+
 fun indicesToBytes(indices: List<Int>):ByteArray {
     if (indices.notAll { it in 0..(mnemonics.size-1) }) {
         error("indicesToBS: illegal indices: $indices")
