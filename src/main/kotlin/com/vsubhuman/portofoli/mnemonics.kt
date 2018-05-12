@@ -2,16 +2,22 @@ package com.vsubhuman.portofoli
 
 import java.math.BigInteger
 
+fun toMnemonic(ent: ByteArray):List<String> {
+    val (cs_len, rem) = ent.size quotRem 4
+    if (rem != 0)
+        error("toMnemonic: entropy must be a multiple of 4 bytes");
+    if (cs_len > 16)
+        error("toMnemonic: maximum entropy is 64 bytes (512 bits)")
+    return emptyList()
+}
+
 fun fromMnemonic(words: List<String>):ByteArray {
-    if (words.size > 48) {
+    if (words.size > 48)
         error("fromMnemonic: too many words: ${words.size}")
-    }
-    if (words.size % 3 != 0) {
+    if (words.size % 3 != 0)
         error("fromMnemonic: wrong number of words: ${words.size}")
-    }
-    if (words.any { !it.isAscii() }) {
+    if (words.any { !it.isAscii() })
         error("fromMnemonic: non-ASCII characters not supported")
-    }
     val indices = words.map { mnemonics.indexOf(it) }
     val ms_bs = indicesToBytes(indices)
     val (entLen, sumLen) = (words.size * 11) quotRem 32

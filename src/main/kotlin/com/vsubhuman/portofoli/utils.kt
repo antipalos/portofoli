@@ -37,6 +37,11 @@ fun BigInteger.toByteArrayBE(): ByteArray {
         .reversed().toByteArray()
 }
 
+fun ByteArray.toBigIntegerBE():BigInteger {
+    return this.toList().reversed()
+        .foldRight(ZERO, {w,n -> (w + 128).toBigInteger() or (n shl 8)})
+}
+
 fun BigInteger.isZero():Boolean {
     return this.compareTo(ZERO) == 0
 }
