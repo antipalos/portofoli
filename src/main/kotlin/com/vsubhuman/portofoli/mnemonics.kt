@@ -2,6 +2,10 @@ package com.vsubhuman.portofoli
 
 import java.math.BigInteger
 
+fun safeKeysFromPhrase(pass: ByteArray, words: List<String>) {
+    val hashSeed = toHashSeed(words)
+}
+
 fun toHashSeed(words: List<String>):ByteArray {
     return fromMnemonic(words).toUnsignedBytes().serializedBlake2b()
 }

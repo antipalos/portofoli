@@ -93,3 +93,7 @@ infix fun ByteArray.splitAt(x: Int):Pair<ByteArray,ByteArray> {
     val second = this.sliceArray(right..(this.size - 1))
     return Pair(first, second)
 }
+
+inline fun <T,R> T.then(f: (T) -> R):R {
+    return f(this)
+}
