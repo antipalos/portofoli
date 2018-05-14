@@ -87,9 +87,5 @@ inline infix fun <T,R> T.unfoldr(f: (T) -> Pair<R,T>?):List<R> {
 }
 
 infix fun ByteArray.splitAt(x: Int):Pair<ByteArray,ByteArray> {
-    val left = kotlin.math.min(kotlin.math.max(x, -1), this.size) - 1
-    val right = kotlin.math.max((x + 1), 0) - 1
-    val first = this.sliceArray(0..left)
-    val second = this.sliceArray(right..(this.size - 1))
-    return Pair(first, second)
+    return Pair(this.take(x).toByteArray(), this.drop(x).toByteArray())
 }
