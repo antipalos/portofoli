@@ -17,10 +17,9 @@ fun newXPrv(seed: ByteArray, pass: ByteArray) {
 }
 
 fun hmac(ent: ByteArray, key: ByteArray):Pair<ByteArray, ByteArray> {
-    val HMAC_SHA512 = "HmacSHA512"
-    Mac.getInstance(HMAC_SHA512).then {
-        it.init(SecretKeySpec(ent, HMAC_SHA512))
-        it.update(key)
-        return it.doFinal().splitAt(32)
-    }
+    val algo = "HmacSHA512"
+    val hmac = Mac.getInstance(algo)
+    hmac.init(SecretKeySpec(ent, algo))
+    hmac.update(key)
+    return hmac.doFinal().splitAt(32)
 }
